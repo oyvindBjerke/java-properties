@@ -17,11 +17,11 @@ public class Properties {
     private static final Pattern KEY_PATTERN = Pattern.compile("^[A-Z_]+[A-Z0-9_]*$");
 
     /**
-     * Finds a environment variable or system property value given a key, environment variable takes
-     * precedence over a system property if both exists
+     * Finds a environment variable or system property value given a key, system property takes
+     * precedence over an environment variable if both exists
      *
-     * @param key The environment variable or system property key to find a value for
-     * @return the value of the environment variable or system property found for the given key
+     * @param key The system property or environment variable  key to find a value for
+     * @return the value of the system property or environment variable  found for the given key
      * @throws IllegalArgumentException if the provided key is not a valid key given the POSIX standard
      */
     public static Optional<String> getProperty(String key) {
