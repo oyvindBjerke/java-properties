@@ -46,5 +46,5 @@ Optional<String> value = Properties.getProperty("DB_HOST");
 ```
 
 ## Implementation details
-* JUni5
+* JUnit5
 * Java 10
