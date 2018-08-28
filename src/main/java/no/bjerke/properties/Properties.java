@@ -27,12 +27,12 @@ public class Properties {
     public static Optional<String> getProperty(String key) {
         LOGGER.debug("Fetching property with key: {}", key);
         validate(key);
-        final var property = System.getProperty(key);
+        final String property = System.getProperty(key);
         if(property != null) {
             LOGGER.info("Found system property for key {} with value {}", key, property);
             return Optional.of(property);
         }
-        final var envValue = System.getenv(key);
+        final String envValue = System.getenv(key);
         if(envValue != null) {
             LOGGER.info("Found environment variable for key {} with value {}", key, envValue);
             return Optional.of(envValue);

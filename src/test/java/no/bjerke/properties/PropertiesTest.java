@@ -1,74 +1,72 @@
 package no.bjerke.properties;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Map;
+import java.util.Optional;
 
-class PropertiesTest {
+import static org.junit.Assert.*;
 
-    @Test
-    void null_key_should_throw_expected_exception() {
-        var exception = assertThrows(NullPointerException.class, () -> Properties.getProperty(null));
-        assertEquals("Key may not be null", exception.getMessage());
+public class PropertiesTest {
+
+    @Test(expected = NullPointerException.class)
+    public void null_key_should_throw_expected_exception() {
+        Properties.getProperty(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void key_with_dot_should_throw_expected_exception() {
+        Properties.getProperty("MY.PROPERTY");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void key_with_digit_as_first_character_should_throw_expected_exception() {
+        Properties.getProperty("1_PROPERTY");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void key_with_lower_case_character_should_throw_expected_exception() {
+        Properties.getProperty("MY_PROPERTy");
     }
 
     @Test
-    void key_with_dot_should_throw_expected_exception() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> Properties.getProperty("MY.PROPERTY"));
-        assertEquals("Property key may not contain dots", exception.getMessage());
-    }
-
-    @Test
-    void key_with_digit_as_first_character_should_throw_expected_exception() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> Properties.getProperty("1_PROPERTY"));
-        assertEquals("Property key may not start with a digit", exception.getMessage());
-    }
-
-    @Test
-    void key_with_lower_case_character_should_throw_expected_exception() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> Properties.getProperty("MY_PROPERTy"));
-        assertEquals("Illegal key for environment variable/system property: MY_PROPERTy", exception.getMessage());
-    }
-
-    @Test
-    void key_with_digits_should_return_expected_result() {
-        var result = Properties.getProperty("MY_1_PROPERTY");
+    public void key_with_digits_should_return_expected_result() {
+        Optional<String> result = Properties.getProperty("MY_1_PROPERTY");
         assertNotNull(result);
     }
 
-    @Test
-    void key_with_dash_should_throw_expected_exception() {
-        var exception = assertThrows(IllegalArgumentException.class, () -> Properties.getProperty("MY-PROPERTY"));
-        assertEquals("Illegal key for environment variable/system property: MY-PROPERTY", exception.getMessage());
+    @Test(expected = IllegalArgumentException.class)
+    public void key_with_dash_should_throw_expected_exception() {
+        Properties.getProperty("MY-PROPERTY");
     }
 
     @Test
-    void key_with_matching_system_property_should_return_expected_value() {
+    public void key_with_matching_system_property_should_return_expected_value() {
         System.setProperty("MY_PROPERTY", "some-value");
-        var result = Properties.getProperty("MY_PROPERTY");
+        Optional<String> result = Properties.getProperty("MY_PROPERTY");
         assertTrue(result.isPresent());
         assertEquals("some-value", result.get());
     }
 
     @Test
-    void key_with_matching_env_variable_should_return_expected_value() {
-        var entry = System.getenv().entrySet().stream().findFirst().orElseThrow(
+    public void key_with_matching_env_variable_should_return_expected_value() {
+        Map.Entry<String, String> entry = System.getenv().entrySet().stream().findFirst().orElseThrow(
                 () -> new IllegalStateException("No environment variables present while running test")
         );
-        var result = Properties.getProperty(entry.getKey());
+        Optional<String> result = Properties.getProperty(entry.getKey());
         assertTrue(result.isPresent());
         assertEquals(entry.getValue(), result.get());
     }
 
     @Test
-    void key_with_matching_env_variable_and_system_property_should_return_system_property_value() {
-        var entry = System.getenv().entrySet().stream().findFirst().orElseThrow(
+    public void key_with_matching_env_variable_and_system_property_should_return_system_property_value() {
+        Map.Entry<String, String> entry = System.getenv().entrySet().stream().findFirst().orElseThrow(
                 () -> new IllegalStateException("No environment variables present while running test")
         );
-        var key = entry.getKey();
-        assertNull(System.getProperty(key), "Should set a system property which does not already exist");
+        String key = entry.getKey();
+        assertNull("Should set a system property which does not already exist", System.getProperty(key));
         System.setProperty(key, "value-of-property");
-        var result = Properties.getProperty(key);
+        Optional<String> result = Properties.getProperty(key);
         assertTrue(result.isPresent());
         assertEquals("value-of-property", result.get());
         System.clearProperty(key);
