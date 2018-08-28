@@ -3,7 +3,7 @@
 ## Maven dependency
 ```xml
 <dependency>
-    <groupId>com.github.oyvindbjerke</groupId>
+    <groupId>no.obje</groupId>
     <artifactId>properties</artifactId>
     <version>0.3</version>
 </dependency>
@@ -40,7 +40,7 @@ For simplicity this library will only allow uppercased letters and underscore as
 The following example will fetch a string value for the system property "DB_HOST" if it exists, if it does not it will look for an environment variable for the same key. If neither exists it will return an empty result.
 
 ```java
-import no.bjerke.properties.Properties
+import Properties;
 
 Optional<String> value = Properties.getProperty("DB_HOST");
 ```

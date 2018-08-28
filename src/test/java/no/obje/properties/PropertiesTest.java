@@ -1,4 +1,4 @@
-package no.bjerke.properties;
+package no.obje.properties;
 
 import org.junit.Test;
 

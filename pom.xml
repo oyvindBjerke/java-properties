@@ -10,7 +10,7 @@
         <version>9</version>
     </parent>
 
-    <groupId>com.github.oyvindbjerke</groupId>
+    <groupId>no.obje</groupId>
     <artifactId>properties</artifactId>
     <version>0.3-SNAPSHOT</version>
 
